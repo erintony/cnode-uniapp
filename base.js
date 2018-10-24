@@ -35,4 +35,20 @@ exports.install = function (Vue, options) {
 			return result + "秒前";
 		}
 	};
+	
+	Vue.prototype.requestPromise = param => {
+		return new Promise((resovle, reject) => {
+			uni.request({
+				url: param.url, 
+				data: param.data || {},
+				header: param.header || {},
+				success: (res) => {
+						resovle(res);
+				},
+				fail: (err) => {
+						reject(err);
+				}
+			})
+		})
+	}
 };

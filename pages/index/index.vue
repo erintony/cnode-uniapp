@@ -28,7 +28,7 @@
 					<text class="title">{{value.title}}</text>
 					
 					<view class="latest-info">
-						<image :src="value.author.avatar_url" :title="value.author.loginname" class="user_small_avatar"></image>
+						<image :src="value.last_reply_user ? value.last_reply_user.avatar_url : value.author.avatar_url" :title="value.last_reply_user ? value.last_reply_user.loginname : value.author.loginname" class="user_small_avatar"></image>
 						<text class="last_active_time">{{value.last_reply_at}}</text>
 					</view>
 				
@@ -101,7 +101,30 @@
 				});
 
 				this.showData = topics;
+			},
+			
+			data : function() {
+				console.log("data update,..");
+				var server = 'https://cnodejs.org/api/v1/topic/';
+				var _that = this;
+				for (let item of this.data) {
+					//查询最后评论用户信息
+					this.requestPromise({
+						url: server + item.id,
+					}).then(Res => {
+						var replies = Res.data.data.replies;
+						item.last_reply_user = replies[replies.length - 1].author;											
+						_that.topicTapClick(_that.selectedTopic);	
+					}).catch(err => {
+						item.last_replay_user = item.author;
+						console.log("topic详情查询请求失败");  
+					})
+				}
 			}
+		},
+		
+		beforeMount: function() {
+			console.log("beforeMounted,..");
 		},
 		
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
@@ -109,44 +132,50 @@
 			console.log(option.id); //打印出上个页面传递的参数。
 			var server = 'https://cnodejs.org/api/v1';
 			var _that = this;
-			uni.request({
-				url: server + '/topics', 
-				success: (res) => {
-					_that.data = res.data.data;
-					
-					
-					var topics = {
-						"all": {
-							tab: "all",
-							count: _that.data.length,
-							selected: true
-						}
-					};
-					_that.data.forEach(function(item,index) {
-						item.last_reply_at = _that.latestTimeFormat(item.last_reply_at);
-						
-						if (topics[item.tab]) {
-							topics[item.tab].count ++;
-						} else {
-							topics[item.tab] = {
-								tab: item.tab,
-								selected: false
-							};
-							topics[item.tab].count = 1;
-						}
-					});
-					
-					_that.showData = _that.data;
-					_that.tabs = topics;
-										
-				}
-			});
 			
+			this.requestPromise({
+			  url: server + '/topics',
+			}).then(res => {
+				
+				var data = res.data.data;
+				var topics = {
+					"all": {
+						tab: "all",
+						count: data.length,
+						selected: true
+					}
+				};
+				
+				
+				data.forEach(function(item,index) {
+					item.last_reply_at = _that.latestTimeFormat(item.last_reply_at);
+					
+					//创建tab筛选数据
+					if (topics[item.tab]) {
+						topics[item.tab].count ++;
+					} else {
+						topics[item.tab] = {
+							tab: item.tab,
+							selected: false
+						};
+						topics[item.tab].count = 1;
+					}
+					
+				});
+				
+				_that.data = data;
+				
+				_that.showData = _that.data;
+				_that.tabs = topics;
+									 
+			}).catch(err => {
+				console.log("topic获取查询请求失败");  
+			})
 			
 		},
 	
 		onReady: function() {
-			console.log('onReady..');
+			console.log("onReady,..");
 			
 		},
 		onShow() {
