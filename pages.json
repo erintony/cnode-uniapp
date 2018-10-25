@@ -5,6 +5,13 @@
 			"style": {
 				"navigationBarTitleText": "cnode"
 			}
+		},
+		
+		{
+			"path": "pages/topic/topic",
+			"style": {
+				"navigationBarTitleText": "cnode"
+			}
 		}
 	],
 	"globalStyle": {

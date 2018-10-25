@@ -1,16 +1,7 @@
 <template>
-	<view id="app">
-		<view class="head">
-			<view class="logo-view">
-				<image class="logo" src="../../static/cnode-logo.svg" style="height: 100%;"></image>
-			</view>
-			
-			<view class="search-section">
-				<input :class="searchFocus ? 'focus' : '' " focus @focus="focus" @blur="blur"/>
-			</view>
-			
-			<view class="more-view"><image class="more" src="../../static/more.svg" width="16" height="16"></image></view>
-		</view>
+	<view id="app" class="app-container">
+		<cn-head></cn-head>
+		
 		<view class="content">
 			<view class="topic-tab">
 				<text v-for="(value, key) in tabs" :key='key' :class="value.selected ? 'selected' : ''" @tap="topicTapClick(key)">
@@ -24,8 +15,11 @@
 					<text class="reply-count">{{value.reply_count}}</text>
 					<text>/</text>
 					<text class="visit-count">{{value.visit_count}}</text>
-					<text class="topiclist-tab">{{value.tab}}</text>
-					<text class="title">{{value.title}}</text>
+					<text class="topic-tag" :class="value.top ? 'top' : ''">{{value.top ? '置顶' : value.tab}}</text>
+					<!-- <navigator url="../topic/topic?id=value.id" hover-class="navigator-hover">
+						<text class="title">{{value.title}}</text>
+					</navigator> -->
+					<text class="title" @tap='toTopic(value.id)'>{{value.title}}</text>
 					
 					<view class="latest-info">
 						<image :src="value.last_reply_user ? value.last_reply_user.avatar_url : value.author.avatar_url" :title="value.last_reply_user ? value.last_reply_user.loginname : value.author.loginname" class="user_small_avatar"></image>
@@ -41,6 +35,8 @@
 </template>
 
 <script>
+	import cnHead from "../../components/header/cnHead.vue";
+	
 	export default {
 		data: {
 			title: 'Hello',
@@ -51,13 +47,11 @@
 			showData: [],
 		},
 		
+		components: {
+			cnHead
+		},
+		
 		methods:{
-			focus: function(e) {
-				this.searchFocus = true;
-			},
-			blur: function(e) {
-				this.searchFocus = false;
-			},
 			
 			getTopics: function() {
 				
@@ -84,6 +78,12 @@
 					}
 				}
 				
+			},
+			
+			toTopic: function(id) {
+				uni.navigateTo({
+					url: '../topic/topic?id=' + id
+				});
 			}
 		},
 		
@@ -185,67 +185,18 @@
 </script>
 
 <style lang="scss">
-	#app {
-		display: block;
-		width: 100%;
-		
-		view {
-			//display: block;
-			
-		}
-	}
+	@import "../../common/common.scss";
+// 	#app {
+// 		display: block;
+// 		width: 100%;
+// 		
+// 		view {
+// 			//display: block;
+// 			
+// 		}
+// 	}
 	
-	.head {
-		height: 50px;
-		background-color: #444; 
-		justify-content: space-between;
-		
-		.logo-view {
-			flex: 1 1 1;
-		}
-		
-		.logo {
-			width: 80px;
-			object-fit: contain;
-		}
-		
-		.search-section {
-			flex: 1 2 2;
-			margin:0 20px;
-			padding:10px 0;
-
-			
-			input {
-				background:#888;
-				padding: 3px 5px 3px 12px;
-				color: #666;
-				border: 0;
-				margin-top: 2px;
-				transition: all .5s;
-				margin-bottom: 0;
-				font-size: 13px;
-				font-weight: 400;
-				line-height: 1;
-				-webkit-border-radius: 15px;
-				-moz-border-radius: 15px;
-				border-radius: 15px;
-				
-				&.focus {
-					background: #eee;
-				}
-			}
-		}
-		
-		.more-view {
-			padding:10px 4px;
-		}
-		
-		.more {
-			width: 32px;
-			height: 32px;
-			color: #fff;
-		}
-	}
+	
 	.content {
 		flex-flow: column nowrap;
 		flex: 1;
@@ -323,17 +274,6 @@
 					
 				}
 				
-				.topiclist-tab {
-					margin: 0 20upx;
-					padding: 6upx 12upx;
-					line-height: 1;
-					align-self: center;
-					
-					background-color: #e5e5e5;
-					color: #999;
-					border-radius: 10upx;
-					
-				}
 				
 				.last_active_time {
 					

@@ -1,0 +1,27 @@
+page {
+	flex-direction: column;
+	
+}
+
+.app-container {
+	flex-direction: column;
+	font-size: 36upx;
+	background-color: #e1e1e1;
+}
+
+.topic-tag {
+	margin: 0 20upx;
+	padding: 8upx 12upx;
+	line-height:1 !important;
+	align-self: center;
+	
+	background-color: #e5e5e5;
+	color: #999;
+	border-radius: 10upx;
+	font-size: 26upx;
+	
+	&.top {
+		background-color: #80bd01;
+		color: #fff;
+	}
+}
