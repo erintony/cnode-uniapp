@@ -2,6 +2,11 @@
 
 > A cnode app based on uni-app
 
+## 开发工具
+- HBuiilderX
+- 微信开发者工具（小程序）
+- Xcode（ios模拟器）
+
 ## Build Setup
 
 ``` bash

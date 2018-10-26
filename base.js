@@ -1,6 +1,9 @@
 
 exports.install = function (Vue, options) {
    Vue.prototype.latestTimeFormat = function(time) {
+		 if (!time) {
+			 return '';
+		 }
 		var differ = new Date(new Date() - new Date(time));
 		
 		

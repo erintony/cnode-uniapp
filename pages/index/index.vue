@@ -186,16 +186,6 @@
 
 <style lang="scss">
 	@import "../../common/common.scss";
-// 	#app {
-// 		display: block;
-// 		width: 100%;
-// 		
-// 		view {
-// 			//display: block;
-// 			
-// 		}
-// 	}
-	
 	
 	.content {
 		flex-flow: column nowrap;

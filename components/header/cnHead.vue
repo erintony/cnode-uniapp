@@ -43,6 +43,7 @@
 	
 	.logo-view {
 		flex: 1 1 1;
+		padding: 0 20upx;
 	}
 	
 	.logo {
