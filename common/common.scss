@@ -5,7 +5,7 @@ page {
 
 .app-container {
 	flex-direction: column;
-	font-size: 36upx;
+	font-size: 32upx;
 	background-color: #e1e1e1;
 }
 
@@ -24,4 +24,13 @@ page {
 		background-color: #80bd01;
 		color: #fff;
 	}
+}
+
+		
+.avatar {
+	margin-right: 20upx;
+	border-radius: 6upx;
+	width: 60upx;
+	height: 60upx;
+	flex-shrink: 0;
 }

@@ -4,31 +4,13 @@
 		
 		<view class="content">
 			<view class="topic-tab">
-				<text v-for="(value, key) in tabs" :key='key' :class="value.selected ? 'selected' : ''" @tap="topicTapClick(key)">
+				<text v-for="(value, key) in tabs" :key='key' :class="value.selected ? 'selected' : ''" @tap='topicTapClick(key)'>
 					{{key}}({{value.count}})
 				</text>
 			</view>
 			
-			<view class="topic-list">
-				<view v-for="(value, key) in showData" :key='key' class="topic">
-					<image class="avatar" :src="value.author.avatar_url" :title="value.author.loginname"></image>
-					<text class="reply-count">{{value.reply_count}}</text>
-					<text>/</text>
-					<text class="visit-count">{{value.visit_count}}</text>
-					<text class="topic-tag" :class="value.top ? 'top' : ''">{{value.top ? '置顶' : value.tab}}</text>
-					<!-- <navigator url="../topic/topic?id=value.id" hover-class="navigator-hover">
-						<text class="title">{{value.title}}</text>
-					</navigator> -->
-					<text class="title" @tap='toTopic(value.id)'>{{value.title}}</text>
-					
-					<view class="latest-info">
-						<image :src="value.last_reply_user ? value.last_reply_user.avatar_url : value.author.avatar_url" :title="value.last_reply_user ? value.last_reply_user.loginname : value.author.loginname" class="user_small_avatar"></image>
-						<text class="last_active_time">{{value.last_reply_at}}</text>
-					</view>
-				
-				</view>
-				
-			</view>
+			<topic-list :data="showData"></topic-list>
+			
 		</view>
 	</view>
 	
@@ -36,6 +18,7 @@
 
 <script>
 	import cnHead from "../../components/header/cnHead.vue";
+	import topicList from '../../components/topic-list/topic-list.vue';
 	
 	export default {
 		data: {
@@ -48,7 +31,8 @@
 		},
 		
 		components: {
-			cnHead
+			cnHead,
+			topicList
 		},
 		
 		methods:{
@@ -80,11 +64,6 @@
 				
 			},
 			
-			toTopic: function(id) {
-				uni.navigateTo({
-					url: '../topic/topic?id=' + id
-				});
-			}
 		},
 		
 		watch : {
@@ -104,7 +83,6 @@
 			},
 			
 			data : function() {
-				console.log("data update,..");
 				var server = 'https://cnodejs.org/api/v1/topic/';
 				var _that = this;
 				for (let item of this.data) {
@@ -128,8 +106,6 @@
 		},
 		
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
-			console.log("onload...");
-			console.log(option.id); //打印出上个页面传递的参数。
 			var server = 'https://cnodejs.org/api/v1';
 			var _that = this;
 			
@@ -146,20 +122,30 @@
 					}
 				};
 				
+				//console.dir(data);
+				
 				
 				data.forEach(function(item,index) {
 					item.last_reply_at = _that.latestTimeFormat(item.last_reply_at);
 					
+					var tab = item.tab;
+					if (!tab) {
+						tab = "unclassified";
+						item.tab = tab;
+					}
+					
 					//创建tab筛选数据
-					if (topics[item.tab]) {
-						topics[item.tab].count ++;
+					if (topics[tab]) {
+						topics[tab].count ++;
 					} else {
-						topics[item.tab] = {
+						topics[tab] = {
 							tab: item.tab,
 							selected: false
 						};
-						topics[item.tab].count = 1;
+						topics[tab].count = 1;
 					}
+					
+					
 					
 				});
 				
@@ -199,6 +185,7 @@
 			background-color: #f6f6f6;
 			border-radius: 3px 3px 0 0;
 			justify-content:flex-start;
+			flex-wrap: wrap;
 
 			text {
 				padding: 6upx 12upx;
@@ -219,66 +206,5 @@
 			}
 		}
 	
-		.topic-list {
-			width: 100%;
-			flex-flow: column nowrap;
-			font-size: 36upx;
-			
-			.topic {
-				padding: 20upx;
-				background: #fff;
-				border-top: 1upx solid #f0f0f0;
-				flex-wrap: wrap;
-				font-size: 34upx;
-				
-				.avatar {
-					width: 60upx;
-					height: 60upx;
-				}
-				
-				image {
-					margin-right: 10upx;
-					border-radius: 6upx;
-					
-				}
-				
-				.user_small_avatar {
-					width: 46upx;
-					height: 46upx;
-					align-self: center;
-				
-				}
-				
-				text {
-					line-height: 60upx;
-				}
-				
-				.reply-count {
-					color: #9e78c0;
-					font-size: 34upx;
-				}
-				
-				.visit-count {
-					color: #b4b4b4;
-					font-size: 30upx;
-					
-				}
-				
-				
-				.last_active_time {
-					
-				}
-				
-				.latest-info {
-					flex-grow: 1;//这三个元素只有它在有空余空间时可伸缩，也就是它占据了所有剩余空间
-					justify-content: flex-end;
-				}
-			}
-		}
-	}
-
-	.title {
-		font-size: 36upx;
-		color: #8f8f94;
 	}
 </style>

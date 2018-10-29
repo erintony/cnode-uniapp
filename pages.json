@@ -12,7 +12,22 @@
 			"style": {
 				"navigationBarTitleText": "cnode"
 			}
+		},
+		
+		{
+			"path": "pages/profile/profile",
+			"style": {
+				"navigationBarTitleText": "cnode"
+			}
+		},
+		
+		{
+			"path": "pages/collection/collection",
+			"style": {
+				"navigationBarTitleText": "cnode"
+			}
 		}
+		
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

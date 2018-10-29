@@ -34,14 +34,14 @@
 			<view class="reply-list">
 				<view v-for="(reply, index) in data.replies" class="reply-item" :key="reply.id" :class="reply.is_uped ? 'reply-hightlight' : ''">
 					<view class="user">
-						<image class="avatar" :src="reply.author.avatar_url"  :title="reply.author.loginname" mode=""></image>
+						<image class="avatar" :src="reply.author.avatar_url"  :title="reply.author.loginname" mode="" @tap='toUser(reply.author.loginname)'></image>
 					</view>
 					
 					<view class="reply-info">
 						<view class="title-info">
 							<text class="user-name">{{reply.author.loginname}}</text>
 							<text>{{index + 1}}楼•{{reply.create_time}}</text>
-							<view class="up-info">
+							<view v-if="reply.ups && reply.ups.length" class="up-info">
 								<image src="../../static/up.svg" mode=""></image>
 								<text class="up-count">{{reply.ups.length}}</text>
 							</view>
@@ -64,7 +64,7 @@
 	
 	export default {
 		onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
-			console.log(option.id); //打印出上个页面传递的参数。
+
 			var _that = this;
 			this.requestPromise({
 				url: "https://cnodejs.org/api/v1/topic/" + option.id,
@@ -95,7 +95,11 @@
 		},
 		
 		methods: {
-			
+			toUser: function(user) {
+				uni.navigateTo({
+					url: '../profile/profile?user=' + user
+				});
+			},
 		}
 		
 	}
@@ -130,6 +134,8 @@
 			}
 			
 			.sub-info {
+				flex-wrap:wrap;
+
 				padding: 12upx 10upx;
 				font-size: 30upx;
 				color: #838383;
@@ -211,6 +217,10 @@
 				image {
 					width: 50upx;
 					height: 50upx;
+				}
+				
+				.up-count {
+					margin-left: 0;
 				}
 				
 			}
