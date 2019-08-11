@@ -14,8 +14,10 @@
 
 <script>
 	export default {
-		data: {
-			searchFocus: true,
+		data() {
+			return {
+				searchFocus: true,
+			}
 		},
 		
 		methods: {

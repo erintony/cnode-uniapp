@@ -21,13 +21,15 @@
 	import topicList from '../../components/topic-list/topic-list.vue';
 	
 	export default {
-		data: {
-			title: 'Hello',
-			searchFocus: true,
-			tabs: {},
-			data: [],
-			selectedTopic: 'all',
-			showData: [],
+		data() {
+			return {
+				title: 'Hello',
+				searchFocus: true,
+				tabs: {},
+				data: [],
+				selectedTopic: 'all',
+				showData: [],
+			}
 		},
 		
 		components: {
